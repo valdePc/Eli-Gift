@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto - Personaliza Tu Mundo</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
+  <style>
+    /* RESET y estilos globales */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      font-family: 'Raleway', sans-serif;
+      background: #ffffff;
+      color: #333;
+    }
+    /* Cabecera fija */
+    header {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e60073;
+    }
+    .menu-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #e60073;
+    }
+    /* Contenedor de Contacto */
+    .contact-container {
+      margin: 100px auto 40px;
+      max-width: 600px;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .contact-container h2 {
+      color: #e60073;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+    .contact-container p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .whatsapp-btn {
+      display: inline-block;
+      padding: 14px 24px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      background: #25d366;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .whatsapp-btn:hover {
+      background: #1ebe5d;
+    }
+    /* Footer */
+    footer {
+      background: #ffe6f2;
+      padding: 20px;
+      text-align: center;
+      color: #e60073;
+      font-weight: 600;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .contact-container {
+        margin: 80px 20px 40px;
+        padding: 20px;
+      }
+      .contact-container h2 {
+        font-size: 1.8em;
+      }
+      .contact-container p, .whatsapp-btn {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabecera -->
+  <header>
+    <div class="logo">Personaliza Tu Mundo</div>
+    <button class="menu-btn" onclick="window.history.back()">&#10094; Volver</button>
+  </header>
+  
+  <!-- Contenedor de Contacto -->
+  <div class="contact-container">
+    <h2>Contáctanos</h2>
+    <p>Si tienes alguna consulta o deseas más información, contáctame vía WhatsApp.</p>
+    <!-- Reemplaza 1234567890 por tu número de teléfono internacional sin ceros ni signos -->
+    <a class="whatsapp-btn" href="https://wa.me/1234567890?text=Hola%20estoy%20interesado" target="_blank">
+      Contactar por WhatsApp
+    </a>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Personaliza Tu Mundo. Todos los derechos reservados.
+  </footer>
+</body>
+</html>
