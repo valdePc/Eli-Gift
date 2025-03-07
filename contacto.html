@@ -98,6 +98,103 @@
         font-size: 16px;
       }
     }
+    .social-container {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff3f8;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .follow-title {
+      font-size: 24px;
+      color: #e60073;
+      font-weight: bold;
+      margin-bottom: 15px;
+      animation: pulse 1.5s infinite alternate;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .social-btn {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+    .instagram {
+      background: #E4405F;
+      color: #fff;
+    }
+    .tiktok {
+      background: #000;
+      color: #fff;
+    }
+    .social-btn:hover {
+      transform: scale(1.1);
+    }
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(1.05);
+      }
+    }
+    @media (max-width: 768px) {
+      .social-links {
+        flex-direction: column;
+      }
+      .social-btn {
+        width: 80%;
+        text-align: center;
+      }
+    }
+    .social-container {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background: #fff3f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .follow-title {
+    font-size: 24px;
+    color: #e60073;
+    font-weight: bold;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite alternate;
+  }
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .social-icon {
+    width: 50px; /* Ajusta el tamaño según necesites */
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  .social-icon:hover {
+    transform: scale(1.2);
+  }
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+  }
+  @media (max-width: 768px) {
+    .social-links {
+      flex-direction: column;
+    }
+    .social-icon {
+      width: 60px; /* Más grande en móvil */
+    }
+  }
   </style>
 </head>
 <body>
@@ -112,11 +209,23 @@
     <h2>Contáctanos</h2>
     <p>Si tienes alguna consulta o deseas más información, contáctame vía WhatsApp.</p>
     <!-- Reemplaza 1234567890 por tu número de teléfono internacional sin ceros ni signos -->
-    <a class="whatsapp-btn" href="https://wa.me/1234567890?text=Hola%20estoy%20interesado" target="_blank">
+    <a class="whatsapp-btn" href="https://l.instagram.com/?u=https%3A%2F%2Fwa.me%2Fmessage%2FUZEAJ5W67WA4O1%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAaa250L5mTGq33s9X4_JX95VLAikTwdKUOdo21rp_fRzUCVyrRLyY_nph-Y_aem_iPJvixnM57HbASydzgMwfA&e=AT0NjLoPIMFyHIQ1YADFaARSxyEnna_3XacvCtil-qxZgB-JZsKFjRr8ZeurmuCKW1c5-Uo11ZivDTpJqYI2kBY2P4lUs8QCMfm5r7g" target="_blank">
       Contactar por WhatsApp
     </a>
+    
   </div>
-  
+ <!-- Sección de Redes Sociales -->
+<div class="social-container">
+  <h2 class="follow-title">✨ Síguenos ✨</h2>
+  <div class="social-links">
+    <a href="https://www.instagram.com/eligift_rd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">
+      <img src="images/instagram.png" alt="Instagram" class="social-icon">
+    </a>
+    <a href="https://www.tiktok.com/@eligift_rd?is_from_webapp=1&sender_device=pc" target="_blank">
+      <img src="images/tiktok.png" alt="TikTok" class="social-icon">
+    </a>
+  </div>
+</div>
   <!-- Footer -->
   <footer>
     &copy; 2025 ♥ Detalles que cuentan historias♥.

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f2c1bd; 
+    }
+
+    .banner {
+      width: 100%;
+      height: 300px; 
+      background-size: cover;
+      background-position: center;
+      position: relative; 
+    }
+
+    .profile {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      position: absolute;
+      bottom: 0; 
+      left: 50%;
+      transform: translate(-50%, 50%);
+      transition: transform 0.5s;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+    }
+
+    .profile.rotated {
+      transform: translate(-50%, 50%) rotate(360deg);
+    }
+
+    .widget {
+      max-width: 600px;
+      margin: 80px auto 40px auto;
+      background-color: #f2d4c2;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .widget h2 {
+      color: #f2636f;
+      margin-bottom: 10px;
+    }
+
+    .widget p {
+      color: #333;
+      line-height: 1.5;
+    }
+/* Estilos para el header fijo y el botón "Volver" */
+header {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px 30px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #e60073;
+}
+
+   
+  </style>
+</head>
+<body>
+
+  <!-- Banner de Portada -->
+  <div class="banner" id="banner">
+    <button class="menu-btn" onclick="window.history.back()">&#10094; Volver</button>
+    <!-- Foto de Perfil -->
+    <img src="" alt="Foto de Perfil" class="profile" id="profileImage">
+  </div>
+
+  <!-- Widget con Lema e Historia -->
+  <div class="widget">
+    <!-- Botón para regresar a la página anterior -->
+
+    <h2 id="lema">Cargando Lema...</h2>
+    <p id="historia">Cargando Historia...</p>
+  </div>
+
+
+  <!-- Script para obtener los datos de Airtable y actualizar la página -->
+  <script>
+
+    // Reemplaza estos valores con tus datos reales
+    const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
+    const baseId = 'appx4eD3f7NINswZW';
+    const airtableTableName = 'Yo';
+
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(airtableTableName)}`;
+
+    fetch(url, {
+      headers: {
+        Authorization: `Bearer ${airtableApiKey}`
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error en la red: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Respuesta de Airtable:", data);
+      if (data.records && data.records.length > 0) {
+        const record = data.records[0].fields;
+        
+        if(record.Portada && record.Portada.length > 0) {
+          document.getElementById('banner').style.backgroundImage = `url(${record.Portada[0].url})`;
+        }
+        if(record.Perfil && record.Perfil.length > 0) {
+          document.getElementById('profileImage').src = record.Perfil[0].url;
+        }
+        if(record.Lema) {
+          document.getElementById('lema').innerText = record.Lema;
+        }
+        if(record.historia) {
+          document.getElementById('historia').innerText = record.historia;
+        }
+      } else {
+        console.error("No se encontraron registros en Airtable.");
+      }
+    })
+    .catch(error => {
+      console.error("Error al obtener datos de Airtable:", error);
+    });
+
+    const profileImage = document.getElementById('profileImage');
+    profileImage.addEventListener('click', function() {
+      profileImage.classList.toggle('rotated');
+    });
+  </script>
+</body>
+</html>
