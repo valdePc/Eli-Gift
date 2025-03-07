@@ -182,7 +182,7 @@ const baseId = 'appx4eD3f7NINswZW';
 const tableName = getQueryParameter('tabla') || 'Llavero';
 
 // Construir la URL para la solicitud a Airtable usando la tabla elegida
-const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Titulo&fields[]=Contenido&fields[]=Descripci%C3%B3n&fields[]=Precios`;
+const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Titulo&fields[]=Contenido&fields[]=Descripci%C3%B3n&fields[]=Precios&fields[]=Like`;
 
 // Referencias a elementos del DOM
 const gallery = document.getElementById('gallery');
@@ -218,7 +218,6 @@ async function loadData() {
     pageTitle.textContent = "Sin datos";
   }
 
-  // Generar cada ítem en la galería
 // Generar cada ítem en la galería
 data.records.forEach(record => {
   const item = document.createElement('div');
@@ -251,83 +250,50 @@ data.records.forEach(record => {
     info.appendChild(price);
   }
 
-  // Agregar botón de "Me gusta"
+  // Crear y configurar el botón de "Me gusta"
   const likeButton = document.createElement('button');
   likeButton.className = 'like-button';
   likeButton.dataset.recordId = record.id; // identificador único del registro
-  likeButton.innerHTML = '&#10084; <span class="like-count">0</span>';
   
-  // Revisar si ya se dio like previamente en localStorage
+  // Obtener el contador actual de likes (si existe, si no, inicia en 0)
+  let currentLikes = record.fields.Like ? record.fields.Like : 0;
+  likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
+
+  // Si el usuario ya dio like en este navegador, se marca el botón
   if (localStorage.getItem('liked_' + record.id)) {
     likeButton.classList.add('liked');
-    likeButton.querySelector('.like-count').textContent = '1';
   }
-  
+
+  // Event listener para agregar o quitar el like
   likeButton.addEventListener('click', function(event) {
     event.stopPropagation();
     const recId = record.id;
-    if (localStorage.getItem('liked_' + recId)) {
-      alert("Ya has dado me gusta a este contenido.");
-      return;
-    }
     const countSpan = likeButton.querySelector('.like-count');
-    let count = parseInt(countSpan.textContent);
-    countSpan.textContent = count + 1;
-    localStorage.setItem('liked_' + recId, 'true');
-    likeButton.classList.add('liked');
-  });
-  
-  info.appendChild(likeButton);
+    let currentCount = parseInt(countSpan.textContent);
 
+    if (localStorage.getItem('liked_' + recId)) {
+      // El usuario ya dio like: se quita (resta 1)
+      let newCount = currentCount - 1;
+      countSpan.textContent = newCount;
+      localStorage.removeItem('liked_' + recId);
+      likeButton.classList.remove('liked');
+      updateLikeInAirtable(recId, newCount);
+    } else {
+      // No ha dado like: se suma (agrega 1)
+      let newCount = currentCount + 1;
+      countSpan.textContent = newCount;
+      localStorage.setItem('liked_' + recId, 'true');
+      likeButton.classList.add('liked');
+      updateLikeInAirtable(recId, newCount);
+    }
+  });
+
+  info.appendChild(likeButton);
   item.appendChild(info);
   gallery.appendChild(item);
 });
 
-// Agregar botón de "Me gusta"
-const likeButton = document.createElement('button');
-likeButton.className = 'like-button';
-likeButton.dataset.recordId = record.id; // identificador único del registro
-
-// Obtener el contador de likes del registro (suponiendo que la columna se llama "Like")
-let currentLikes = 0;
-if (record.fields.Like) {
-  currentLikes = record.fields.Like;
-}
-
-// Se muestra el contador actual
-likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
-
-// Revisar si ya se dio like previamente en localStorage
-if (localStorage.getItem('liked_' + record.id)) {
-  likeButton.classList.add('liked');
-}
-
-// Listener para el botón
-likeButton.addEventListener('click', function(event) {
-  // Evitar que se active el click del item (modal)
-  event.stopPropagation();
-  const recId = record.id;
-  if (localStorage.getItem('liked_' + recId)) {
-    alert("Ya has dado me gusta a este contenido.");
-    return;
-  }
-  
-  // Incrementar el contador visualmente
-  const countSpan = likeButton.querySelector('.like-count');
-  let newCount = parseInt(countSpan.textContent) + 1;
-  countSpan.textContent = newCount;
-  
-  // Guardar en localStorage para evitar múltiples likes
-  localStorage.setItem('liked_' + recId, 'true');
-  likeButton.classList.add('liked');
-  
-  // Actualizar el campo "Like" en Airtable
-  updateLikeInAirtable(recId, newCount);
-});
-  
-// Agregar el botón de like al contenedor de información
 info.appendChild(likeButton);
-
 
 
   // Configurar el modal para ampliar contenido
