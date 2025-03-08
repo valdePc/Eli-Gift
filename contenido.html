@@ -6,7 +6,7 @@
   <title>Contenido</title>
   <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos globales */
+    /* (Tus estilos existentes se mantienen) */
     body, html {
       margin: 0;
       padding: 0;
@@ -25,7 +25,6 @@
       font-size: 2.5em;
       color: #e60073;
     }
-    /* Galería de contenidos */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -58,7 +57,41 @@
       font-weight: bold;
       color: #e60073;
     }
-    /* Modal para ampliar el contenido */
+    #backButton, .cart-button, .like-button {
+      background-color: #e60073;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin: 5px;
+    }
+    #backButton:hover, .cart-button:hover, .like-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    #backButton:active, .cart-button:active, .like-button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .like-button {
+      background: none;
+      color: #999;
+      padding: 0;
+      margin-top: 10px;
+    }
+    .like-button.liked {
+      color: #e60073;
+    }
+    .like-button span.like-count {
+      margin-left: 8px;
+      font-size: 1rem;
+      color: #333;
+    }
+    /* Modal existente para ampliar imagen */
     .modal {
       display: none;
       position: fixed;
@@ -86,6 +119,30 @@
       font-weight: bold;
       cursor: pointer;
     }
+    /* Estilos para el resumen del carrito */
+    #cartSummary {
+      padding: 20px;
+      text-align: center;
+    }
+    #finalizePurchaseButton {
+      background-color: #e60073;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #finalizePurchaseButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    #finalizePurchaseButton:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
     @media (max-width: 768px) {
       header h1 {
         font-size: 2em;
@@ -94,58 +151,56 @@
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       }
     }
-     /* Estilo para el botón de regresar */
-  #backButton {
-    background-color: #e60073;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin: 20px;
-  }
-
-  #backButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-
-  #backButton:active {
-    transform: translateY(0);
-    box-shadow: none;
-  }
-  /* Botón de "Me gusta" (like) */
-.like-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #999;
-  display: inline-flex;
-  align-items: center;
-  transition: color 0.3s;
-  margin-top: 10px;
-}
-.like-button.liked {
-  color: #e60073;
-}
-.like-button:hover {
-  color: #e60073;
-}
-.like-count {
-  margin-left: 8px;
-  font-size: 1rem;
-  color: #333;
-}
-
+    /* Modal para autenticación (Login y Registro) */
+    #authModal .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+      position: relative;
+    }
+    #authModal .close {
+      color: #333;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+    #authModal form label {
+      display: block;
+      margin: 10px 0;
+    }
+    #authModal form input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    #authModal form button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: #e60073;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    /* Botones para alternar entre Login y Registro */
+    .toggle-btn {
+      margin-top: 10px;
+      background-color: transparent;
+      color: #e60073;
+      border: 1px solid #e60073;
+    }
   </style>
 </head>
 <body>
-  <!-- Cabecera con el título del contenido -->
-   <button id="backButton">Regresar</button>
+  <!-- Botón de regresar -->
+  <button id="backButton">Regresar</button>
   <header>
     <h1 id="pageTitle">Contenido</h1>
   </header>
@@ -155,40 +210,59 @@
     <!-- Los ítems se inyectarán aquí -->
   </div>
 
-  <!-- Modal para ampliar imagen e información -->
+  <!-- Resumen del carrito -->
+  <div id="cartSummary">
+    <button id="finalizePurchaseButton">
+      Finalizar Compra (<span id="totalItems">0</span> artículos, $<span id="totalCost">0.00</span>)
+    </button>
+  </div>
+
+  <!-- Modal para ampliar imagen (ya existente) -->
   <div id="modal" class="modal">
     <span id="closeModal" class="close">&times;</span>
     <img class="modal-content" id="modalImg">
     <div id="caption" style="text-align:center; color:#fff; margin-top:15px;"></div>
   </div>
 
+  <!-- Modal para autenticación (registro/inicio de sesión) -->
+ 
+  <!-- Modal para autenticación (Login y Registro) -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span id="closeAuthModal" class="close">&times;</span>
+      <!-- Contenedor dinámico para mostrar Login o Registro -->
+      <div id="authFormContainer"></div>
+    </div>
+  </div>
   <script>
-     document.getElementById('backButton').addEventListener('click', function() {
-    window.history.back();
-  });
- // Función para obtener el parámetro "tabla" de la URL
-// Función para obtener el parámetro "tabla" de la URL
-function getQueryParameter(param) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(param);
-}
 
-// Configuración de Airtable
-const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
+    document.getElementById('backButton').addEventListener('click', function() {
+      window.history.back();
+    });
+    // Al presionar "Finalizar Compra" se muestra el formulario de Login
+document.getElementById('finalizePurchaseButton').addEventListener('click', function() {
+  showLoginForm();
+});
+
+
+    // Función para obtener el parámetro "tabla" de la URL
+    function getQueryParameter(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    // Configuración de Airtable
+    const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
 const baseId = 'appx4eD3f7NINswZW';
-
-// Se obtiene el nombre de la tabla a partir del parámetro "tabla" (por ejemplo ?tabla=Llavero),
-// o se usa "Llavero" (o la que quieras) como valor por defecto
 const tableName = getQueryParameter('tabla') || 'Llavero';
-
-// Construir la URL para la solicitud a Airtable usando la tabla elegida
+const registroTable = 'Registro';  // Variable agregada para la tabla de registros
 const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Titulo&fields[]=Contenido&fields[]=Descripci%C3%B3n&fields[]=Precios&fields[]=Like`;
 
-// Referencias a elementos del DOM
-const gallery = document.getElementById('gallery');
-const pageTitle = document.getElementById('pageTitle');
 
-async function loadData() {
+    const gallery = document.getElementById('gallery');
+    const pageTitle = document.getElementById('pageTitle');
+
+    async function loadData() {
   let data;
   try {
     const response = await fetch(url, {
@@ -198,8 +272,6 @@ async function loadData() {
     });
     data = await response.json();
     console.log("Datos obtenidos de Airtable:", data);
-    
-    // Verificar si hay error en la respuesta
     if (data.error) {
       console.error("Error de Airtable:", data.error);
       pageTitle.textContent = "Error al cargar datos";
@@ -211,90 +283,98 @@ async function loadData() {
     return;
   }
 
-  // Actualiza el título de la página si existe un campo "Titulo" en el primer registro
+  // Actualiza el título de la página si existe el campo "Titulo" en el primer registro
   if (data.records && data.records.length > 0 && data.records[0].fields.Titulo) {
     pageTitle.textContent = data.records[0].fields.Titulo;
   } else {
     pageTitle.textContent = "Sin datos";
   }
 
-// Generar cada ítem en la galería
-data.records.forEach(record => {
-  const item = document.createElement('div');
-  item.className = 'item';
-  
-  // Se asume que "Contenido" es un campo de imágenes (adjuntos)
-  if (record.fields.Contenido && Array.isArray(record.fields.Contenido)) {
-    const img = document.createElement('img');
-    img.src = record.fields.Contenido[0].url;
-    img.alt = record.fields.Titulo || 'Contenido';
-    item.appendChild(img);
-  }
-  
-  const info = document.createElement('div');
-  info.className = 'info';
-
-  // Agregar la descripción
-  if (record.fields.Descripción) {
-    const description = document.createElement('p');
-    description.className = 'description';
-    description.textContent = record.fields.Descripción;
-    info.appendChild(description);
+  // Si existe el campo "Logo" en el primer registro, lo almacenamos en localStorage
+  if (data.records && data.records.length > 0 && data.records[0].fields.Logo) {
+    // Se asume que "Logo" es un campo de imagen (adjuntos)
+    const logoUrl = data.records[0].fields.Logo[0].url;
+    localStorage.setItem('eliGiftLogo', logoUrl);
   }
 
-  // Agregar el precio
-  if (record.fields.Precios) {
-    const price = document.createElement('p');
-    price.className = 'price';
-    price.textContent = record.fields.Precios;
-    info.appendChild(price);
-  }
+  // Generar cada ítem en la galería
+  data.records.forEach(record => {
+    const item = document.createElement('div');
+    item.className = 'item';
 
-  // Crear y configurar el botón de "Me gusta"
-  const likeButton = document.createElement('button');
-  likeButton.className = 'like-button';
-  likeButton.dataset.recordId = record.id; // identificador único del registro
-  
-  // Obtener el contador actual de likes (si existe, si no, inicia en 0)
-  let currentLikes = record.fields.Like ? record.fields.Like : 0;
-  likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
-
-  // Si el usuario ya dio like en este navegador, se marca el botón
-  if (localStorage.getItem('liked_' + record.id)) {
-    likeButton.classList.add('liked');
-  }
-
-  // Event listener para agregar o quitar el like
-  likeButton.addEventListener('click', function(event) {
-    event.stopPropagation();
-    const recId = record.id;
-    const countSpan = likeButton.querySelector('.like-count');
-    let currentCount = parseInt(countSpan.textContent);
-
-    if (localStorage.getItem('liked_' + recId)) {
-      // El usuario ya dio like: se quita (resta 1)
-      let newCount = currentCount - 1;
-      countSpan.textContent = newCount;
-      localStorage.removeItem('liked_' + recId);
-      likeButton.classList.remove('liked');
-      updateLikeInAirtable(recId, newCount);
-    } else {
-      // No ha dado like: se suma (agrega 1)
-      let newCount = currentCount + 1;
-      countSpan.textContent = newCount;
-      localStorage.setItem('liked_' + recId, 'true');
-      likeButton.classList.add('liked');
-      updateLikeInAirtable(recId, newCount);
+    // Se asume que "Contenido" es un campo de imágenes (adjuntos)
+    if (record.fields.Contenido && Array.isArray(record.fields.Contenido)) {
+      const img = document.createElement('img');
+      img.src = record.fields.Contenido[0].url;
+      img.alt = record.fields.Titulo || 'Contenido';
+      item.appendChild(img);
     }
+
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    // Agregar la descripción
+    if (record.fields.Descripción) {
+      const description = document.createElement('p');
+      description.className = 'description';
+      description.textContent = record.fields.Descripción;
+      info.appendChild(description);
+    }
+
+    // Agregar el precio
+    if (record.fields.Precios) {
+      const price = document.createElement('p');
+      price.className = 'price';
+      price.textContent = record.fields.Precios;
+      info.appendChild(price);
+    }
+
+    // Botón de "Me gusta"
+    const likeButton = document.createElement('button');
+    likeButton.className = 'like-button';
+    likeButton.dataset.recordId = record.id;
+    let currentLikes = record.fields.Like ? record.fields.Like : 0;
+    likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
+    if (localStorage.getItem('liked_' + record.id)) {
+      likeButton.classList.add('liked');
+    }
+    likeButton.addEventListener('click', function(event) {
+      event.stopPropagation();
+      const recId = record.id;
+      const countSpan = likeButton.querySelector('.like-count');
+      let currentCount = parseInt(countSpan.textContent);
+      if (localStorage.getItem('liked_' + recId)) {
+        let newCount = currentCount - 1;
+        countSpan.textContent = newCount;
+        localStorage.removeItem('liked_' + recId);
+        likeButton.classList.remove('liked');
+        updateLikeInAirtable(recId, newCount);
+      } else {
+        let newCount = currentCount + 1;
+        countSpan.textContent = newCount;
+        localStorage.setItem('liked_' + recId, 'true');
+        likeButton.classList.add('liked');
+        updateLikeInAirtable(recId, newCount);
+      }
+    });
+    info.appendChild(likeButton);
+
+    // Botón de carrito (añadir/quitar)
+    const cartButton = document.createElement('button');
+    cartButton.className = 'cart-button';
+    cartButton.dataset.recordId = record.id;
+    let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+    let isInCart = cart.find(item => item.id === record.id);
+    cartButton.textContent = isInCart ? 'Quitar del carrito' : 'Añadir al carrito';
+    cartButton.addEventListener('click', function(event) {
+      event.stopPropagation();
+      toggleCartItem(record, cartButton);
+    });
+    info.appendChild(cartButton);
+
+    item.appendChild(info);
+    gallery.appendChild(item);
   });
-
-  info.appendChild(likeButton);
-  item.appendChild(info);
-  gallery.appendChild(item);
-});
-
-info.appendChild(likeButton);
-
 
   // Configurar el modal para ampliar contenido
   const modal = document.getElementById('modal');
@@ -319,42 +399,209 @@ info.appendChild(likeButton);
     if (event.target === modal) {
       modal.style.display = "none";
     }
+    if (event.target === document.getElementById('authModal')) {
+      document.getElementById('authModal').style.display = "none";
+    }
   });
+
+  updateCartSummary();
 }
 
 document.addEventListener('DOMContentLoaded', loadData);
 
-function updateLikeInAirtable(recordId, newCount) {
-  // Construir la URL del registro a actualizar
-  const updateUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
-  
-  // Preparar el payload
-  const dataToUpdate = {
-    fields: {
-      "Like": newCount
+    function updateLikeInAirtable(recordId, newCount) {
+      const updateUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
+      const dataToUpdate = {
+        fields: {
+          "Like": newCount
+        }
+      };
+      fetch(updateUrl, {
+        method: 'PATCH',
+        headers: {
+          Authorization: 'Bearer ' + airtableApiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToUpdate)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error actualizando Like: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(updatedData => {
+        console.log("Actualización de Like exitosa:", updatedData);
+      })
+      .catch(error => {
+        console.error("Error al actualizar el Like en Airtable:", error);
+      });
     }
-  };
-  
-  fetch(updateUrl, {
-    method: 'PATCH',
+
+    // Función para añadir o quitar un artículo del carrito
+    function toggleCartItem(record, button) {
+  let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+  const index = cart.findIndex(item => item.id === record.id);
+  if (index > -1) {
+    cart.splice(index, 1);
+    button.textContent = 'Añadir al carrito';
+  } else {
+    cart.push({
+      id: record.id,
+      titulo: record.fields.Titulo || '',
+      descripcion: record.fields.Descripción || '', // Asegúrate de guardar la descripción si la necesitas en la factura
+      precio: parseFloat(record.fields.Precios) || 0,
+      imagen: (record.fields.Contenido && record.fields.Contenido[0].url) || '',
+      cantidad: 1 // Valor por defecto
+    });
+    button.textContent = 'Quitar del carrito';
+  }
+  localStorage.setItem('cartItems', JSON.stringify(cart));
+  updateCartSummary(); // Si tienes una función para actualizar el resumen del carrito
+}
+
+    // Actualiza el resumen del carrito (total de artículos y costo)
+    function updateCartSummary() {
+      let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      let totalItems = cart.length;
+      let totalCost = cart.reduce((acc, item) => acc + item.precio, 0);
+      document.getElementById('totalItems').textContent = totalItems;
+      document.getElementById('totalCost').textContent = totalCost.toFixed(2);
+    }
+
+    // Evento para finalizar la compra
+    document.getElementById('finalizePurchaseButton').addEventListener('click', function() {
+      // Se asume que el usuario se guarda en localStorage tras registrarse
+      let user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        showRegistrationForm();
+      } else {
+        showLoginForm();
+      }
+    });
+
+    function showRegistrationForm() {
+  const authModal = document.getElementById('authModal');
+  const authFormContainer = document.getElementById('authFormContainer');
+  authFormContainer.innerHTML = `
+    <h2>Registro</h2>
+    <form id="registrationForm">
+      <label>Nombre: <input type="text" name="name" required></label>
+      <label>Correo: <input type="email" name="mail"></label>
+      <label>WhatsApp: <input type="text" name="whatsapp"></label>
+      <label>Contraseña: <input type="password" name="password1" required></label>
+      <label>Confirmar Contraseña: <input type="password" name="password2" required></label>
+      <button type="submit">Enviar</button>
+    </form>
+  `;
+  authModal.style.display = "block";
+
+  document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get('name').trim();
+    const mail = formData.get('mail').trim();
+    const whatsapp = formData.get('whatsapp').trim();
+    const password1 = formData.get('password1');
+    const password2 = formData.get('password2');
+    // Verifica que al menos se ingrese correo o WhatsApp
+    if (!mail && !whatsapp) {
+      alert("Debes ingresar al menos un dato: correo o WhatsApp.");
+      return;
+    }
+    if (password1 !== password2) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+    submitRegistrationForm({ name, mail, whatsapp, password1, password2 });
+  });
+}
+
+    function submitRegistrationForm({ name, mail, whatsapp, password1, password2 }) {
+  const fechaRegistro = new Date().toISOString();
+  const data = {
+  fields: {
+    "Name": name,
+    "Mail": mail,
+    "WhatsApp": whatsapp,
+    "1Password": password1,
+    "2Password": password2,
+    "Fecha de Registro": fechaRegistro
+  },
+  typecast: true
+};
+
+
+fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(registroTable)}`, {
+    method: 'POST',
     headers: {
       Authorization: 'Bearer ' + airtableApiKey,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(dataToUpdate)
+    body: JSON.stringify(data)
   })
   .then(response => {
-    if (!response.ok) {
-      throw new Error('Error actualizando Like: ' + response.status);
-    }
+    console.log("Respuesta del fetch:", response); // Aquí se muestra la respuesta en la consola
     return response.json();
   })
-  .then(updatedData => {
-    console.log("Actualización de Like exitosa:", updatedData);
+  .then(result => {
+    console.log('Registro guardado:', result);
+    localStorage.setItem('user', JSON.stringify({ mail, whatsapp, password: password1 }));
+    document.getElementById('authModal').style.display = "none";
+    window.location.href = "carrito.html";
   })
   .catch(error => {
-    console.error("Error al actualizar el Like en Airtable:", error);
+    console.error('Error al guardar el registro:', error);
+    alert("Error al guardar el registro. Inténtalo nuevamente.");
   });
+}
+
+    // Mostrar formulario de inicio de sesión
+    function showLoginForm() {
+  const authModal = document.getElementById('authModal');
+  const authFormContainer = document.getElementById('authFormContainer');
+  authFormContainer.innerHTML = `
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+      <label>Correo o Teléfono: <input type="text" name="identifier" required></label>
+      <label>Contraseña: <input type="password" name="password" required></label>
+      <button type="submit">Entrar</button>
+    </form>
+    <button id="btnShowRegister" class="toggle-btn">Registrarme</button>
+  `;
+  authModal.style.display = "block";
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const identifier = formData.get('identifier').trim();
+    const password = formData.get('password');
+    checkLoginCredentials(identifier, password);
+  });
+  document.getElementById('btnShowRegister').addEventListener('click', function() {
+    showRegistrationForm();
+  });
+}
+async function checkLoginCredentials(identifier, password) { 
+  try {
+    // Fórmula de filtro para buscar coincidencias en Mail o WhatsApp con la contraseña
+    const filterFormula = encodeURIComponent(`OR(AND({Mail} = '${identifier}', {1Password} = '${password}'), AND({WhatsApp} = '${identifier}', {1Password} = '${password}'))`);
+    const queryUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(registroTable)}?filterByFormula=${filterFormula}`;
+    const response = await fetch(queryUrl, {
+      headers: { Authorization: 'Bearer ' + airtableApiKey }
+    });
+    const result = await response.json();
+    if (result.records && result.records.length > 0) {
+      // Credenciales válidas: redirige a carrito.html
+      document.getElementById('authModal').style.display = "none";
+      window.location.href = "carrito.html";
+    } else {
+      alert("Credenciales incorrectas. Por favor, verifica tus datos o regístrate.");
+    }
+  } catch (error) {
+    console.error("Error validando credenciales:", error);
+    alert("Error al validar credenciales.");
+  }
 }
 
 

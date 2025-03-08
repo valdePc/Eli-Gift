@@ -66,7 +66,7 @@
       top: 10px;
     }
     
-    /* Menú lateral desplegable que se cargará desde Airtable (campo "menu") */
+    /* Menú lateral desplegable */
     nav {
       position: fixed;
       top: 60px;
@@ -116,7 +116,6 @@
       justify-content: center;
       align-items: center;
     }
-    /* Estilo para las imágenes en modo banner */
     .carousel-item img {
       width: 100%;
       height: 400px; /* Ajusta la altura según tus necesidades */
@@ -124,9 +123,8 @@
       border: none;
       box-shadow: none;
       transition: transform 0.3s;
-      top: 20px; 
+      top: 20px;
     }
- 
     .carousel-item img:hover {
       transform: scale(1.05);
     }
@@ -219,72 +217,77 @@
       }
     }
     .header-links {
-  margin-right: auto; /* Ubica estos enlaces a la izquierda de la cabecera */
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-.header-links a {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  color: #e60073;
-  font-weight: 600;
-  transition: color 0.3s;
-  gap: 8px; /* Espacio entre ícono y texto */
-}
-.header-links a:hover {
-  color: #b3004b;
-}
-.header-links svg {
-  flex-shrink: 0;
-}
-
-    
+      margin-right: auto; /* Ubica estos enlaces a la izquierda de la cabecera */
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .header-links a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: #e60073;
+      font-weight: 600;
+      transition: color 0.3s;
+      gap: 8px;
+    }
+    .header-links a:hover {
+      color: #b3004b;
+    }
+    .header-links svg {
+      flex-shrink: 0;
+    }
+    /* Botón flotante de Contacto con diseño mejorado */
+    .floating-contact {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #e60073, #b3004b);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 2000;
+    }
+    .floating-contact:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+    .floating-contact svg {
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
- <!-- Cabecera (sin texto de logo) -->
- <header>
-  <div class="header-links">
-    <a href="contacto.html">
-      <svg width="20" height="20" fill="none" stroke="#e60073" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="3" width="16" height="14" rx="2" ry="2"></rect>
-        <path d="M2 3l8 7 8-7"></path>
-      </svg>
-      <span>Contacto</span>
-    </a>
-    <a href="about.html">
-      <svg width="20" height="20" fill="none" stroke="#e60073" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="10" cy="10" r="9"></circle>
-        <line x1="10" y1="13" x2="10" y2="10"></line>
-        <line x1="10" y1="7" x2="10.01" y2="7"></line>
-      </svg>
-      <span>Sobre Nosotros</span>
-    </a>
-  </div>
-  <button class="menu-btn" onclick="toggleMenu()">
-    <span class="menu-icon"></span>
-  </button>
-</header>
-
+  <!-- Cabecera -->
+  <header>
+    
+    <button class="menu-btn" onclick="toggleMenu()">
+      <span class="menu-icon"></span>
+    </button>
+  </header>
+  
   <!-- Menú lateral desplegable -->
   <nav id="dropdownMenu">
-    <!-- El contenido se cargará dinámicamente -->
+    <!-- Se cargará dinámicamente -->
   </nav>
   
-    <div id="bannerLogo" class="banner-logo" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
-      <!-- Aquí se insertará el logo desde Airtable -->
-    </div>
-  <!-- Carrusel Banner con logo superpuesto -->
-<div class="carousel" style="position: relative;">
-    <!-- Contenedor del logo (se superpone al banner) -->
+  <!-- Contenedor para el logo (cargado desde Airtable) -->
+  <div id="bannerLogo" class="banner-logo" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+    <!-- Aquí se insertará el logo -->
+  </div>
   
-    
+  <!-- Carrusel Banner -->
+  <div class="carousel" style="position: relative;">
     <!-- Controles del carrusel -->
     <button class="carousel-control left" onclick="prevSlide()">&#10094;</button>
     <div class="carousel-inner" id="carouselInner">
-      <!-- Aquí se inyectarán las imágenes de portada desde Airtable (los ejemplos se pueden eliminar) -->
+      <!-- Imágenes de portada se inyectan desde Airtable -->
       <div class="carousel-item">
         <img src="https://via.placeholder.com/300/FFC0CB/FFFFFF?text=Imagen+1" alt="Imagen 1">
       </div>
@@ -304,14 +307,21 @@
     <p>
       Aquí encontrarás productos únicos y hechos a medida: botellas, llaveros y regalos sorpresa personalizados con detalle y mucho amor. Descubre la magia de tener un artículo que refleje tu estilo.
     </p>
-    <!-- Puedes agregar secciones adicionales según tus necesidades -->
   </div>
-  
   
   <!-- Footer -->
   <footer>
     &copy; 2025   ♥Detalles que cuentan historias♥.
   </footer>
+  
+  <!-- Botón flotante de Contacto con diseño mejorado -->
+  <a href="contacto.html" class="floating-contact">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+      <path d="M2 3l10 9 10-9"></path>
+    </svg>
+    <span>Contacto</span>
+  </a>
   
   <script>
     // Función para alternar el menú lateral
@@ -344,113 +354,123 @@
       showSlide(currentSlide - 1);
     }
     
-    // Función para cargar imágenes desde Airtable usando Token de autenticación
+    // Función para cargar datos desde Airtable (logo, carrusel, menú)
     async function loadCarouselImages() {
-    const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
-    const baseId = 'appx4eD3f7NINswZW';
-    
-    // Lee el parámetro "tabla" desde la URL; si no existe, usa 'Eli Gift' por defecto
-    const urlParams = new URLSearchParams(window.location.search);
-    const tableName = urlParams.get('tabla') || 'Eli Gift';
-    console.log("Cargando imágenes para la tabla:", tableName);
-    
-    // Construye la URL de consulta usando el nombre de tabla obtenido
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=portada&fields[]=logo&fields[]=menu`;
-    console.log("URL de consulta:", url);
-    
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: 'Bearer ' + airtableApiKey
-        }
-      });
-      const data = await response.json();
+      const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
+      const baseId = 'appx4eD3f7NINswZW';
       
-      // Referencias a los contenedores
-      const bannerLogo = document.getElementById('bannerLogo');
-      const carouselInner = document.getElementById('carouselInner');
-      const dropdownMenu = document.getElementById('dropdownMenu');
+      // Lee el parámetro "tabla" desde la URL; si no existe, usa 'Eli Gift' por defecto
+      const urlParams = new URLSearchParams(window.location.search);
+      const tableName = urlParams.get('tabla') || 'Eli Gift';
+      console.log("Cargando imágenes para la tabla:", tableName);
       
-      // Limpia contenidos previos
-      bannerLogo.innerHTML = "";
-      carouselInner.innerHTML = "";
-      dropdownMenu.innerHTML = "";
+      // Construye la URL de consulta usando el nombre de tabla obtenido
+      const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=portada&fields[]=logo&fields[]=menu`;
+      console.log("URL de consulta:", url);
       
-      if (data && data.records && data.records.length > 0) {
-        data.records.forEach(record => {
-          // Inserta el logo (si existe) - se usa el primero
-          if (record.fields.logo && Array.isArray(record.fields.logo) && record.fields.logo.length > 0 && bannerLogo.innerHTML === "") {
-            const logoImg = document.createElement('img');
-            logoImg.src = record.fields.logo[0].url;
-            logoImg.alt = 'Logo';
-            logoImg.style.width = '150px';
-            bannerLogo.appendChild(logoImg);
-          }
-          
-          // Inserta las imágenes del carrusel desde el campo "portada"
-          if (record.fields.portada && Array.isArray(record.fields.portada)) {
-            record.fields.portada.forEach(image => {
-              const carouselItem = document.createElement('div');
-              carouselItem.className = 'carousel-item';
-              const img = document.createElement('img');
-              img.src = image.url;
-              img.alt = record.fields.name || 'Imagen de portada';
-              carouselItem.appendChild(img);
-              carouselInner.appendChild(carouselItem);
-            });
-          }
-          
-          // Inserta el menú si existe en el campo "menu"
-          if (record.fields.menu) {
-            let menuItems = [];
-            if (record.fields.menu.indexOf('\n') !== -1) {
-              menuItems = record.fields.menu.split('\n').filter(item => item.trim() !== '');
-            } else {
-              menuItems = [record.fields.menu];
-            }
-            
-            const ul = document.createElement('ul');
-            menuItems.forEach(item => {
-              const li = document.createElement('li');
-              const a = document.createElement('a');
-              const menuItem = item.trim();
-              
-              // Si la opción es "Contacto" o "Sobre Nosotros", redirige a las páginas correspondientes.
-              // Para el resto, redirige a contenido.html pasando el nombre de la opción como parámetro.
-              if (menuItem === 'Contacto') {
-                a.href = 'contacto.html';
-              } else if (menuItem === 'Sobre Nosotros') {
-                a.href = 'about.html';
-              } else {
-                a.href = 'contenido.html?tabla=' + encodeURIComponent(menuItem);
-              }
-              a.textContent = menuItem;
-              li.appendChild(a);
-              ul.appendChild(li);
-            });
-            dropdownMenu.appendChild(ul);
-          } else {
-            console.log("No se encontró el campo 'menu' en este registro.");
+      try {
+        const response = await fetch(url, {
+          headers: {
+            Authorization: 'Bearer ' + airtableApiKey
           }
         });
+        const data = await response.json();
         
-        totalSlides = document.querySelectorAll('.carousel-item').length;
-        if (totalSlides > 0) {
-          showSlide(0);
+        // Referencias a los contenedores
+        const bannerLogo = document.getElementById('bannerLogo');
+        const carouselInner = document.getElementById('carouselInner');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        // Limpia contenidos previos
+        bannerLogo.innerHTML = "";
+        carouselInner.innerHTML = "";
+        dropdownMenu.innerHTML = "";
+        
+        if (data && data.records && data.records.length > 0) {
+          // 1) Logo: inserta el logo del primer registro que lo tenga
+          data.records.forEach(record => {
+            if (record.fields.logo && Array.isArray(record.fields.logo) && record.fields.logo.length > 0 && bannerLogo.innerHTML === "") {
+              const logoImg = document.createElement('img');
+              logoImg.src = record.fields.logo[0].url;
+              logoImg.alt = 'Logo';
+              logoImg.style.width = '150px';
+              bannerLogo.appendChild(logoImg);
+            }
+          });
+          
+          // 2) Carrusel: inserta todas las imágenes de portada de todos los registros
+          data.records.forEach(record => {
+            if (record.fields.portada && Array.isArray(record.fields.portada)) {
+              record.fields.portada.forEach(image => {
+                const carouselItem = document.createElement('div');
+                carouselItem.className = 'carousel-item';
+                const img = document.createElement('img');
+                img.src = image.url;
+                img.alt = record.fields.name || 'Imagen de portada';
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+              });
+            }
+          });
+          
+          // 3) Menú: recolecta el campo "menu" de TODOS los registros y construye el menú sin duplicados
+          let menuItems = [];
+          data.records.forEach(record => {
+            if (record.fields.menu) {
+              let items = [];
+              if (record.fields.menu.indexOf('\n') !== -1) {
+                items = record.fields.menu.split('\n')
+                  .map(item => item.trim())
+                  .filter(item => item !== "");
+              } else {
+                items = [record.fields.menu.trim()];
+              }
+              menuItems = menuItems.concat(items);
+            }
+          });
+          // Elimina duplicados (ignorando mayúsculas/minúsculas)
+          menuItems = menuItems.filter((item, index, self) =>
+            index === self.findIndex(t => t.toLowerCase() === item.toLowerCase())
+          );
+          // Elimina todas las apariciones de "Sobre Nosotros" y agrégalo solo al inicio
+          menuItems = menuItems.filter(item => item.toLowerCase() !== "sobre nosotros");
+          menuItems.unshift("Sobre Nosotros");
+  
+          const ul = document.createElement('ul');
+          menuItems.forEach(menuItem => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            if (menuItem === 'Contacto') {
+              a.href = 'contacto.html';
+            } else if (menuItem === 'Sobre Nosotros') {
+              a.href = 'about.html';
+            } else {
+              a.href = 'contenido.html?tabla=' + encodeURIComponent(menuItem);
+            }
+            a.textContent = menuItem;
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+          dropdownMenu.appendChild(ul);
+          
+          // Configura el carrusel
+          totalSlides = document.querySelectorAll('.carousel-item').length;
+          if (totalSlides > 0) {
+            showSlide(0);
+          } else {
+            carouselInner.innerHTML = "<p style='text-align:center;width:100%;'>No se encontraron imágenes.</p>";
+          }
         } else {
+          console.error("No se encontraron registros en la respuesta de Airtable.");
           carouselInner.innerHTML = "<p style='text-align:center;width:100%;'>No se encontraron imágenes.</p>";
         }
-      } else {
-        console.error("No se encontraron registros en la respuesta de Airtable.");
-        carouselInner.innerHTML = "<p style='text-align:center;width:100%;'>No se encontraron imágenes.</p>";
+      } catch (error) {
+        console.error('Error al cargar datos desde Airtable:', error);
+        document.getElementById('carouselInner').innerHTML = "<p style='text-align:center;width:100%; color:red;'>Error al cargar imágenes.</p>";
       }
-    } catch (error) {
-      console.error('Error al cargar datos desde Airtable:', error);
-      document.getElementById('carouselInner').innerHTML = "<p style='text-align:center;width:100%; color:red;'>Error al cargar imágenes.</p>";
     }
-  }
-  
-  document.addEventListener('DOMContentLoaded', loadCarouselImages);
+    
+    document.addEventListener('DOMContentLoaded', loadCarouselImages);
   </script>
 </body>
 </html>
