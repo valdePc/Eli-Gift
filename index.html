@@ -3,273 +3,318 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Personaliza Tu Mundo</title>
+  <title>Eli Gift</title>
   <!-- Fuente personalizada y favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
   <style>
     /* RESET y estilos globales */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body, html {
-      font-family: 'Raleway', sans-serif;
-      background: #ffffff;
-      color: #333;
-      overflow-x: hidden;
-    }
-    
-    /* Cabecera fija con fondo blanco */
-    header {
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 15px 30px;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    /* Botón menú estilo hamburguesa */
-    .menu-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      outline: none;
-    }
-    .menu-icon {
-      width: 30px;
-      height: 3px;
-      background-color: #e60073;
-      display: block;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-    .menu-icon::before,
-    .menu-icon::after {
-      content: '';
-      width: 30px;
-      height: 3px;
-      background-color: #e60073;
-      position: absolute;
-      left: 0;
-      transition: all 0.3s ease;
-    }
-    .menu-icon::before {
-      top: -10px;
-    }
-    .menu-icon::after {
-      top: 10px;
-    }
-    
-    /* Menú lateral desplegable */
-    nav {
-      position: fixed;
-      top: 60px;
-      right: -250px;
-      background: #fff;
-      width: 220px;
-      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-      transition: right 0.3s ease;
-      padding: 20px;
-      border-radius: 0 0 0 5px;
-      z-index: 999;
-    }
-    nav ul {
-      list-style: none;
-    }
-    nav ul li {
-      margin-bottom: 15px;
-    }
-    nav ul li a {
-      text-decoration: none;
-      color: #e60073;
-      font-weight: 600;
-      transition: color 0.3s;
-    }
-    nav ul li a:hover {
-      color: #b3004b;
-    }
-    nav.show {
-      right: 0;
-    }
-    
-    /* Carrusel Banner */
-    .carousel {
-      margin-top: 150px; /* espacio para la cabecera fija */
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      background: #fff;
-    }
-    .carousel-inner {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-    .carousel-item {
-      min-width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .carousel-item img {
-      width: 100%;
-      height: 400px; /* Ajusta la altura según tus necesidades */
-      object-fit: cover;
-      border: none;
-      box-shadow: none;
-      transition: transform 0.3s;
-      top: 20px;
-    }
-    .carousel-item img:hover {
-      transform: scale(1.05);
-    }
-    .carousel-control {
-      position: absolute;
-      top: 40%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: background 0.3s;
-      z-index: 5;
-    }
-    .carousel-control:hover {
-      background: rgba(255,255,255,1);
-    }
-    .carousel-control.left {
-      left: 20px;
-    }
-    .carousel-control.right {
-      right: 20px;
-    }
-    
-    /* Contenido principal */
-    .content {
-      padding: 40px 20px;
-      text-align: center;
-    }
-    .content h1 {
-      color: #e60073;
-      margin-bottom: 20px;
-      font-size: 2.5em;
-    }
-    .content p {
-      font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    /* Footer */
-    footer {
-      background: #ffe6f2;
-      padding: 20px;
-      text-align: center;
-      color: #e60073;
-      font-weight: 600;
-    }
-    
-    /* Media Queries para responsividad */
-    @media (max-width: 768px) {
-      header {
-        padding: 10px 20px;
-      }
-      .menu-icon {
-        width: 25px;
-      }
-      nav {
-        width: 200px;
-        top: 50px;
-      }
-      .content h1 {
-        font-size: 2em;
-      }
-      .content p {
-        font-size: 16px;
-      }
-      .carousel-item img {
-        height: 300px;
-      }
-    }
-    @media (max-width: 480px) {
-      .carousel-control {
-        width: 35px;
-        height: 35px;
-        font-size: 20px;
-      }
-      .carousel-item img {
-        height: 250px;
-      }
-    }
-    .header-links {
-      margin-right: auto; /* Ubica estos enlaces a la izquierda de la cabecera */
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-    .header-links a {
-      display: inline-flex;
-      align-items: center;
-      text-decoration: none;
-      color: #e60073;
-      font-weight: 600;
-      transition: color 0.3s;
-      gap: 8px;
-    }
-    .header-links a:hover {
-      color: #b3004b;
-    }
-    .header-links svg {
-      flex-shrink: 0;
-    }
-    /* Botón flotante de Contacto con diseño mejorado */
-    .floating-contact {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #e60073, #b3004b);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 50px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      z-index: 2000;
-    }
-    .floating-contact:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-    }
-    .floating-contact svg {
-      flex-shrink: 0;
-    }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body, html {
+  font-family: 'Raleway', sans-serif;
+  background: #ffffff;
+  color: #333;
+  overflow-x: hidden;
+  text-align: center; /* Centra por defecto el contenido inline */
+}
+
+/* Cabecera fija con fondo blanco */
+header {
+  background: #fff;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end; /* no centrada el contenido en la cabecera */
+  padding: 15px 30px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/* Botón menú estilo hamburguesa */
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+.menu-icon {
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  display: block;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+}
+.menu-icon::before {
+  top: -10px;
+}
+.menu-icon::after {
+  top: 10px;
+}
+
+/* Menú lateral desplegable */
+nav {
+  position: fixed;
+  top: 60px;
+  right: -250px;
+  background: #fff;
+  width: 220px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  transition: right 0.3s ease;
+  padding: 20px;
+  border-radius: 0 0 0 5px;
+  z-index: 999;
+}
+nav ul {
+  list-style: none;
+  text-align: left; /* Centra los enlaces del menú */
+}
+nav ul li {
+  margin-bottom: 15px;
+}
+nav ul li a {
+  text-decoration: none;
+  color: #e60073;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+nav ul li a:hover {
+  color: #b3004b;
+}
+nav.show {
+  right: 0;
+}
+
+/* Carrusel Banner */
+.carousel {
+  margin-top: 150px; /* espacio para la cabecera fija */
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: #fff;
+}
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+.carousel-item {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carousel-item img {
+  width: 100%;
+  height: 400px; /* Ajusta la altura según tus necesidades */
+  object-fit: cover;
+  border: none;
+  box-shadow: none;
+  transition: transform 0.3s;
+  top: 20px;
+}
+.carousel-item img:hover {
+  transform: scale(1.05);
+}
+.carousel-control {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+  z-index: 5;
+}
+.carousel-control:hover {
+  background: rgba(255,255,255,1);
+}
+.carousel-control.left {
+  left: 20px;
+}
+.carousel-control.right {
+  right: 20px;
+}
+
+/* Contenido principal */
+.content {
+  padding: 40px 20px;
+  text-align: center;
+}
+.content h1 {
+  color: #e60073;
+  margin-bottom: 20px;
+  font-size: 2.5em;
+}
+.content p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Footer */
+footer {
+  background: #ffe6f2;
+  padding: 20px;
+  text-align: center;
+  color: #e60073;
+  font-weight: 600;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  header {
+    padding: 10px 20px;
+  }
+  .menu-icon {
+    width: 25px;
+  }
+  nav {
+    width: 200px;
+    top: 50px;
+  }
+  .content h1 {
+    font-size: 2em;
+  }
+  .content p {
+    font-size: 16px;
+  }
+  .carousel-item img {
+    height: 300px;
+  }
+}
+@media (max-width: 480px) {
+  .carousel-control {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .carousel-item img {
+    height: 250px;
+  }
+}
+
+/* Enlaces de la cabecera centrados */
+.header-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+.header-links a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #e60073;
+  font-weight: 600;
+  transition: color 0.3s;
+  gap: 8px;
+}
+.header-links a:hover {
+  color: #b3004b;
+}
+.header-links svg {
+  flex-shrink: 0;
+}
+
+/* Botón flotante de Contacto con diseño mejorado */
+.floating-contact {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #e60073, black);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 2000;
+}
+.floating-contact:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+.floating-contact svg {
+  flex-shrink: 0;
+}
+
+/* Estilos para filas alternadas de fotos y textos */
+.alternating-row {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  justify-content: center; /* Centra la fila */
+}
+.alternating-row:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.foto, .texto {
+  flex: 1;
+  padding: 10px;
+  text-align: center; /* Centra el contenido de cada columna */
+}
+.foto img {
+  max-width: 100%;
+  height: auto;
+  max-width: 300px;
+  margin: 0 auto; /* Centra la imagen */
+}
+
   </style>
 </head>
 <body>
   <!-- Cabecera -->
   <header>
-    
     <button class="menu-btn" onclick="toggleMenu()">
       <span class="menu-icon"></span>
     </button>
+    <style>
+      body {
+        background-image: url('images/images.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed; /* La imagen se queda fija mientras el contenido se desplaza */
+      }
+      body {
+  background: 
+    linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), /* Capa blanca semitransparente */
+    url('images/images.jpg') center center/cover no-repeat fixed;
+  background-blend-mode: lighten; /* Mezcla la capa blanca con la imagen para aclararla */
+}
+
+    </style>
+    
+
   </header>
   
   <!-- Menú lateral desplegable -->
@@ -309,6 +354,9 @@
     </p>
   </div>
   
+  <!-- Nuevo contenedor para las filas alternadas de fotos y textos -->
+  <div id="alternatingContent"></div>
+  
   <!-- Footer -->
   <footer>
     &copy; 2025   ♥Detalles que cuentan historias♥.
@@ -322,7 +370,7 @@
     </svg>
     <span>Contacto</span>
   </a>
-  
+
   <script>
     // Función para alternar el menú lateral
     function toggleMenu() {
@@ -472,5 +520,65 @@
     
     document.addEventListener('DOMContentLoaded', loadCarouselImages);
   </script>
+
+<script>
+  // Función para cargar contenido alternado (fotos, subtítulos y textos) desde Airtable
+  async function loadAlternatingContent() {
+    const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
+      const baseId = 'appx4eD3f7NINswZW';
+    const tableName = 'Eli Gift';
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Fotos&fields[]=Subtitulos&fields[]=Textos`;
+    
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: 'Bearer ' + airtableApiKey
+        }
+      });
+      const data = await response.json();
+      
+      const container = document.getElementById('alternatingContent');
+      // Limpia el contenedor antes de insertar nuevos elementos
+      container.innerHTML = "";
+      
+      data.records.forEach(record => {
+        const fields = record.fields;
+        // Crear la fila
+        const row = document.createElement('div');
+        row.className = 'alternating-row';
+        
+        // Columna de la foto
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'foto';
+        const img = document.createElement('img');
+        img.src = (fields.Fotos && fields.Fotos[0].url) || '';
+
+        img.alt = fields.Subtitulos || '';
+        imgDiv.appendChild(img);
+        
+        // Columna de texto (subtítulo y párrafo)
+        const textDiv = document.createElement('div');
+        textDiv.className = 'texto';
+        const title = document.createElement('h2');
+        title.textContent = fields.Subtitulos || '';
+        const p = document.createElement('p');
+        p.textContent = fields.Textos || '';
+        textDiv.appendChild(title);
+        textDiv.appendChild(p);
+        
+        // Agregar columnas a la fila y la fila al contenedor
+        row.appendChild(imgDiv);
+        row.appendChild(textDiv);
+        container.appendChild(row);
+      });
+    } catch (error) {
+      console.error("Error al cargar el contenido alternado:", error);
+    }
+  }
+  
+  // Llama a la función una vez que el DOM esté completamente cargado
+  document.addEventListener('DOMContentLoaded', loadAlternatingContent);
+</script>
+
 </body>
 </html>

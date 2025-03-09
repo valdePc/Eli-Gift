@@ -139,68 +139,124 @@
   </div>
 
   <script>
-    // Variables de configuración para Airtable
-    const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
-    const baseId = 'appx4eD3f7NINswZW';
-    
-    // Recupera datos del usuario y del carrito desde localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    
-    // Actualiza la cabecera con el nombre del usuario y fecha
-    document.getElementById('userName').textContent = 'Factura de: ' + (user && user.nombre ? user.nombre : 'Usuario');
-   document.getElementById('facturaDate').textContent = 'Fecha: ' + new Date().toLocaleString();
-    // Logo de Eli Gift: se supone que lo tienes almacenado o lo obtienes desde Airtable
-    const eliGiftLogoUrl = localStorage.getItem('eliGiftLogo') || 'logo_placeholder.png';
-    document.getElementById('eliGiftLogo').src = eliGiftLogoUrl;
+  document.addEventListener('DOMContentLoaded', function() {
+  // Variables de configuración para Airtable
+  const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
+  const baseId = 'appx4eD3f7NINswZW';
 
-    // Función para renderizar la factura usando tarjetas verticales
-    function renderInvoice() {
-      const container = document.getElementById('itemsContainer');
-      container.innerHTML = '';
-      let totalCost = 0;
-      cartItems.forEach((item, index) => {
-        const cantidad = item.cantidad || 1;
-        const total = item.precio * cantidad;
-        totalCost += total;
-        
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.innerHTML = `
-          <div class="item-title">${item.titulo}</div>
-          <div class="item-desc">${item.descripcion || ''}</div>
-          <div class="item-data">
-            <span>Costo: $${item.precio.toFixed(2)}</span>
-            <span>Total: $${total.toFixed(2)}</span>
-          </div>
-          <div class="item-data">
-            <label>Cantidad: <input type="number" min="1" value="${cantidad}" data-index="${index}" class="item-qty"></label>
-          </div>
-          <div class="actions">
-            <button data-index="${index}" class="removeItem">Eliminar</button>
-          </div>
-        `;
-        container.appendChild(card);
+  // Cargar el logo desde Airtable, tabla "Eli Gift", campo "logo"
+  async function loadEliGiftLogo() {
+    const airtableLogoUrl = `https://api.airtable.com/v0/${baseId}/Eli%20Gift?fields[]=logo`;
+    try {
+      const response = await fetch(airtableLogoUrl, {
+        headers: { Authorization: 'Bearer ' + airtableApiKey }
       });
-      document.getElementById('totalCost').textContent = totalCost.toFixed(2);
+      const data = await response.json();
+      if (data.records && data.records.length > 0 && data.records[0].fields.logo) {
+        const logoUrl = data.records[0].fields.logo[0].url;
+        localStorage.setItem('eliGiftLogo', logoUrl);
+        const logoElement = document.getElementById('eliGiftLogo');
+        if (logoElement) {
+          logoElement.src = logoUrl;
+        }
+      } else {
+        console.error("No se encontró el logo en la tabla Eli Gift.");
+      }
+    } catch (error) {
+      console.error("Error al cargar el logo:", error);
     }
-    
-    renderInvoice();
-    
-    // Actualizar cantidad de producto
-    document.getElementById('itemsContainer').addEventListener('input', function(e) {
+  }
+  loadEliGiftLogo();
+
+  // Recupera datos del usuario y del carrito desde localStorage
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+  // Si el usuario no tiene nombre, se solicita y se guarda en localStorage
+  if (!user.nombre && !user.name) {
+    const inputName = prompt("El nombre es obligatorio. Por favor, ingresa tu nombre:");
+    if (inputName && inputName.trim() !== "") {
+      user.nombre = inputName.trim(); // Puedes usar 'nombre' o 'name'
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      alert("No ingresaste un nombre. El nombre es obligatorio.");
+      // Aquí puedes detener la ejecución o redirigir a otra página si lo deseas.
+    }
+  }
+
+  // Define la variable nombreUsuario para usarla en todo el código
+  const nombreUsuario = (user && (user.nombre || user.name)) || "Sin nombre";
+
+  // Actualiza la cabecera con el nombre del usuario y la fecha
+  const userNameElement = document.getElementById('userName');
+  if (userNameElement) {
+    userNameElement.textContent = 'Factura de: ' + nombreUsuario;
+  }
+  const facturaDateElement = document.getElementById('facturaDate');
+  if (facturaDateElement) {
+    facturaDateElement.textContent = 'Fecha: ' + new Date().toLocaleString();
+  }
+
+  // Logo de Eli Gift: se obtiene de localStorage o se usa un placeholder
+  const eliGiftLogoUrl = localStorage.getItem('eliGiftLogo') || 'logo_placeholder.png';
+  const logoElement = document.getElementById('eliGiftLogo');
+  if (logoElement) {
+    logoElement.src = eliGiftLogoUrl;
+  }
+
+  // Función para renderizar la factura usando tarjetas verticales
+  function renderInvoice() {
+    const container = document.getElementById('itemsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    let totalCost = 0;
+    cartItems.forEach((item, index) => {
+      const cantidad = item.cantidad || 1;
+      const total = item.precio * cantidad;
+      totalCost += total;
+      
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.innerHTML = `
+        <div class="item-title">${item.titulo}</div>
+        <div class="item-desc">${item.descripcion || ''}</div>
+        <div class="item-data">
+          <span>Costo: $${item.precio.toFixed(2)}</span>
+          <span>Total: $${total.toFixed(2)}</span>
+        </div>
+        <div class="item-data">
+          <label>Cantidad: <input type="number" min="1" value="${cantidad}" data-index="${index}" class="item-qty"></label>
+        </div>
+        <div class="actions">
+          <button data-index="${index}" class="removeItem">Eliminar</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+    const totalCostElement = document.getElementById('totalCost');
+    if (totalCostElement) {
+      totalCostElement.textContent = totalCost.toFixed(2);
+    }
+  }
+  
+  renderInvoice();
+  
+  // Actualizar cantidad de producto
+  const itemsContainer = document.getElementById('itemsContainer');
+  if (itemsContainer) {
+    itemsContainer.addEventListener('input', function(e) {
       if (e.target.classList.contains('item-qty')) {
         const index = e.target.getAttribute('data-index');
         const newQty = parseInt(e.target.value);
-        if(newQty < 1) return;
+        if (newQty < 1) return;
         cartItems[index].cantidad = newQty;
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         renderInvoice();
       }
     });
-    
+  
     // Eliminar producto del carrito
-    document.getElementById('itemsContainer').addEventListener('click', function(e) {
+    itemsContainer.addEventListener('click', function(e) {
       if (e.target.classList.contains('removeItem')) {
         const index = e.target.getAttribute('data-index');
         cartItems.splice(index, 1);
@@ -208,83 +264,89 @@
         renderInvoice();
       }
     });
-    
-    // Enviar pedido: valida contraseña y envía datos a la tabla "compra"
+  }
+  
   // Enviar pedido: valida contraseña y envía datos a la tabla "compra"
-document.getElementById('sendOrderButton').addEventListener('click', function() {
-  const confirmPassword = document.getElementById('confirmPassword').value;
-  if (!user || !user.password) {
-    alert("No se encontró el usuario registrado.");
-    return;
-  }
-  if (confirmPassword !== user.password) {
-    alert("La contraseña no es correcta.");
-    return;
-  }
-  
-  // Prepara los datos para enviar a Airtable
-  const numeroArticulos = cartItems.reduce((sum, item) => sum + (item.cantidad || 1), 0);
-  const seleccionados = cartItems.map(item => item.titulo).join(" / ");
-  const totalCost = document.getElementById('totalCost').textContent;
-  const fechaPedido = new Date().toISOString();
-  
-  const orderData = {
-    fields: {
-      "Nombre": user.nombre || "Sin nombre",   // Asegúrate de usar la propiedad correcta
-      "Correo": user.mail || "",
-      "WhatsApp": user.whatsapp || "",
-      "Numero": numeroArticulos,
-      "Seleccionados": seleccionados,
-      "Costo Total": parseFloat(totalCost),
-      "Fecha": fechaPedido
-    },
-    typecast: true
-  };
-
-  // Envía el pedido a la tabla "compra" de Airtable
-  fetch(`https://api.airtable.com/v0/${baseId}/compra`, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + airtableApiKey,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(orderData)
-  })
-  .then(response => response.json())
-  .then(result => {
-    console.log('Respuesta completa:', result);
-    if(result.error){
-      alert("Error en Airtable: " + result.error.message);
-    } else {
-      alert("Pedido enviado con éxito.");
-
-      // PREPARA EL MENSAJE PARA WHATSAPP
-      const orderMessage = `Nuevo pedido:
-Nombre: ${user.nombre || "Sin nombre"}
+  const sendOrderButton = document.getElementById('sendOrderButton');
+  if (sendOrderButton) {
+    sendOrderButton.addEventListener('click', function() {
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      if (!user || !user.password) {
+        alert("No se encontró el usuario registrado.");
+        return;
+      }
+      if (confirmPassword !== user.password) {
+        alert("La contraseña no es correcta.");
+        return;
+      }
+      
+      const numeroArticulos = cartItems.reduce((sum, item) => sum + (item.cantidad || 1), 0);
+      const seleccionados = cartItems.map(item => item.titulo).join(" / ");
+      const totalCost = document.getElementById('totalCost').textContent;
+      
+      // Actualiza la cabecera (por si acaso)
+      if (userNameElement) {
+        userNameElement.textContent = 'Factura de: ' + nombreUsuario;
+      }
+      
+      // Objeto para Airtable
+      const orderData = {
+        fields: {
+          "Nombre": nombreUsuario,
+          "Correo": user.mail || user.email || "",
+          "WhatsApp": user.whatsapp || "",
+          "Numero": numeroArticulos,
+          "Seleccionados": seleccionados,
+          "Costo Total": parseFloat(totalCost),
+          "Fecha": new Date().toISOString()
+        },
+        typecast: true
+      };
+      
+      // Envía el pedido a la tabla "compra" de Airtable
+      fetch(`https://api.airtable.com/v0/${baseId}/compra`, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + airtableApiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Respuesta completa:', result);
+        if (result.error) {
+          alert("Error en Airtable: " + result.error.message);
+        } else {
+          alert("Pedido enviado con éxito.");
+          
+          // PREPARA EL MENSAJE PARA WHATSAPP
+          const orderMessage = `Nuevo pedido:
+Nombre: ${nombreUsuario}
 Correo: ${user.mail || ""}
 WhatsApp: ${user.whatsapp || ""}
 Número de artículos: ${numeroArticulos}
 Seleccionados: ${seleccionados}
 Costo Total: $${totalCost}
 Fecha: ${new Date().toLocaleString()}`;
-
-      // Número de teléfono al que se enviará el mensaje (incluye el código de país, sin espacios ni símbolos)
-      const phoneNumber = '18297170682'; // Número de teléfono en formato internacional sin el "+"
-
-
-      // Abre WhatsApp Web con el mensaje preformateado
-      window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(orderMessage)}`, '_blank');
-
-      localStorage.removeItem('cartItems');
-      window.location.href = "index.html";
-    }
-  })
-  .catch(error => {
-    console.error('Error al enviar el pedido:', error);
-    alert("Error al enviar el pedido. Inténtalo nuevamente.");
-  });
+          
+          // Número de teléfono al que se enviará el mensaje (incluye el código de país, sin espacios ni símbolos)
+          const phoneNumber = '18297170682';
+          
+          // Si quieres activar WhatsApp, descomenta la siguiente línea
+           window.open(`https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(orderMessage)}`, '_blank');
+          
+          localStorage.removeItem('cartItems');
+          window.location.href = "index.html";
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar el pedido:', error);
+        alert("Error al enviar el pedido. Inténtalo nuevamente.");
+      });
+    });
+  }
 });
-
 
   </script>
 </body>

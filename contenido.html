@@ -224,8 +224,6 @@
     <div id="caption" style="text-align:center; color:#fff; margin-top:15px;"></div>
   </div>
 
-  <!-- Modal para autenticación (registro/inicio de sesión) -->
- 
   <!-- Modal para autenticación (Login y Registro) -->
   <div id="authModal" class="modal">
     <div class="modal-content">
@@ -234,188 +232,162 @@
       <div id="authFormContainer"></div>
     </div>
   </div>
-  <script>
 
+  <script>
     document.getElementById('backButton').addEventListener('click', function() {
       window.history.back();
     });
-    // Al presionar "Finalizar Compra" se muestra el formulario de Login
-document.getElementById('finalizePurchaseButton').addEventListener('click', function() {
-  showLoginForm();
-});
-
-
-    // Función para obtener el parámetro "tabla" de la URL
-    function getQueryParameter(param) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(param);
-    }
 
     // Configuración de Airtable
     const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';
-const baseId = 'appx4eD3f7NINswZW';
-const tableName = getQueryParameter('tabla') || 'Llavero';
-const registroTable = 'Registro';  // Variable agregada para la tabla de registros
-const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Titulo&fields[]=Contenido&fields[]=Descripci%C3%B3n&fields[]=Precios&fields[]=Like`;
-
+    const baseId = 'appx4eD3f7NINswZW';
+    const tableName = new URLSearchParams(window.location.search).get('tabla') || 'Llavero';
+    const registroTable = 'Registro';
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}?fields[]=Titulo&fields[]=Contenido&fields[]=Descripci%C3%B3n&fields[]=Precios&fields[]=Like`;
 
     const gallery = document.getElementById('gallery');
     const pageTitle = document.getElementById('pageTitle');
 
     async function loadData() {
-  let data;
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: 'Bearer ' + airtableApiKey
+      let data;
+      try {
+        const response = await fetch(url, {
+          headers: { Authorization: 'Bearer ' + airtableApiKey }
+        });
+        data = await response.json();
+        if (data.error) {
+          console.error("Error de Airtable:", data.error);
+          pageTitle.textContent = "Error al cargar datos";
+          return;
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+        pageTitle.textContent = "Error al cargar datos";
+        return;
       }
-    });
-    data = await response.json();
-    console.log("Datos obtenidos de Airtable:", data);
-    if (data.error) {
-      console.error("Error de Airtable:", data.error);
-      pageTitle.textContent = "Error al cargar datos";
-      return;
-    }
-  } catch (error) {
-    console.error("Error al realizar la solicitud:", error);
-    pageTitle.textContent = "Error al cargar datos";
-    return;
-  }
 
-  // Actualiza el título de la página si existe el campo "Titulo" en el primer registro
-  if (data.records && data.records.length > 0 && data.records[0].fields.Titulo) {
-    pageTitle.textContent = data.records[0].fields.Titulo;
-  } else {
-    pageTitle.textContent = "Sin datos";
-  }
-
-  // Si existe el campo "Logo" en el primer registro, lo almacenamos en localStorage
-  if (data.records && data.records.length > 0 && data.records[0].fields.Logo) {
-    // Se asume que "Logo" es un campo de imagen (adjuntos)
-    const logoUrl = data.records[0].fields.Logo[0].url;
-    localStorage.setItem('eliGiftLogo', logoUrl);
-  }
-
-  // Generar cada ítem en la galería
-  data.records.forEach(record => {
-    const item = document.createElement('div');
-    item.className = 'item';
-
-    // Se asume que "Contenido" es un campo de imágenes (adjuntos)
-    if (record.fields.Contenido && Array.isArray(record.fields.Contenido)) {
-      const img = document.createElement('img');
-      img.src = record.fields.Contenido[0].url;
-      img.alt = record.fields.Titulo || 'Contenido';
-      item.appendChild(img);
-    }
-
-    const info = document.createElement('div');
-    info.className = 'info';
-
-    // Agregar la descripción
-    if (record.fields.Descripción) {
-      const description = document.createElement('p');
-      description.className = 'description';
-      description.textContent = record.fields.Descripción;
-      info.appendChild(description);
-    }
-
-    // Agregar el precio
-    if (record.fields.Precios) {
-      const price = document.createElement('p');
-      price.className = 'price';
-      price.textContent = record.fields.Precios;
-      info.appendChild(price);
-    }
-
-    // Botón de "Me gusta"
-    const likeButton = document.createElement('button');
-    likeButton.className = 'like-button';
-    likeButton.dataset.recordId = record.id;
-    let currentLikes = record.fields.Like ? record.fields.Like : 0;
-    likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
-    if (localStorage.getItem('liked_' + record.id)) {
-      likeButton.classList.add('liked');
-    }
-    likeButton.addEventListener('click', function(event) {
-      event.stopPropagation();
-      const recId = record.id;
-      const countSpan = likeButton.querySelector('.like-count');
-      let currentCount = parseInt(countSpan.textContent);
-      if (localStorage.getItem('liked_' + recId)) {
-        let newCount = currentCount - 1;
-        countSpan.textContent = newCount;
-        localStorage.removeItem('liked_' + recId);
-        likeButton.classList.remove('liked');
-        updateLikeInAirtable(recId, newCount);
+      if (data.records && data.records.length > 0 && data.records[0].fields.Titulo) {
+        pageTitle.textContent = data.records[0].fields.Titulo;
       } else {
-        let newCount = currentCount + 1;
-        countSpan.textContent = newCount;
-        localStorage.setItem('liked_' + recId, 'true');
-        likeButton.classList.add('liked');
-        updateLikeInAirtable(recId, newCount);
+        pageTitle.textContent = "Sin datos";
       }
-    });
-    info.appendChild(likeButton);
 
-    // Botón de carrito (añadir/quitar)
-    const cartButton = document.createElement('button');
-    cartButton.className = 'cart-button';
-    cartButton.dataset.recordId = record.id;
-    let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    let isInCart = cart.find(item => item.id === record.id);
-    cartButton.textContent = isInCart ? 'Quitar del carrito' : 'Añadir al carrito';
-    cartButton.addEventListener('click', function(event) {
-      event.stopPropagation();
-      toggleCartItem(record, cartButton);
-    });
-    info.appendChild(cartButton);
+      if (data.records && data.records.length > 0 && data.records[0].fields.Logo) {
+        const logoUrl = data.records[0].fields.Logo[0].url;
+        localStorage.setItem('eliGiftLogo', logoUrl);
+      }
 
-    item.appendChild(info);
-    gallery.appendChild(item);
-  });
+      data.records.forEach(record => {
+        const item = document.createElement('div');
+        item.className = 'item';
 
-  // Configurar el modal para ampliar contenido
-  const modal = document.getElementById('modal');
-  const modalImg = document.getElementById('modalImg');
-  const captionText = document.getElementById('caption');
-  const closeModal = document.getElementById('closeModal');
+        if (record.fields.Contenido && Array.isArray(record.fields.Contenido)) {
+          const img = document.createElement('img');
+          img.src = record.fields.Contenido[0].url;
+          img.alt = record.fields.Titulo || 'Contenido';
+          item.appendChild(img);
+        }
 
-  document.querySelectorAll('.item').forEach(item => {
-    item.addEventListener('click', function() {
-      modal.style.display = "block";
-      const img = item.querySelector('img');
-      modalImg.src = img.src;
-      captionText.innerHTML = item.querySelector('.info').innerHTML;
-    });
-  });
+        const info = document.createElement('div');
+        info.className = 'info';
 
-  closeModal.addEventListener('click', function() {
-    modal.style.display = "none";
-  });
+        if (record.fields.Descripción) {
+          const description = document.createElement('p');
+          description.className = 'description';
+          description.textContent = record.fields.Descripción;
+          info.appendChild(description);
+        }
 
-  window.addEventListener('click', function(event) {
-    if (event.target === modal) {
-      modal.style.display = "none";
+        if (record.fields.Precios) {
+          const price = document.createElement('p');
+          price.className = 'price';
+          price.textContent = record.fields.Precios;
+          info.appendChild(price);
+        }
+
+        // Botón de "Me gusta"
+        const likeButton = document.createElement('button');
+        likeButton.className = 'like-button';
+        likeButton.dataset.recordId = record.id;
+        let currentLikes = record.fields.Like ? record.fields.Like : 0;
+        likeButton.innerHTML = '&#10084; <span class="like-count">' + currentLikes + '</span>';
+        if (localStorage.getItem('liked_' + record.id)) {
+          likeButton.classList.add('liked');
+        }
+        likeButton.addEventListener('click', function(event) {
+          event.stopPropagation();
+          const recId = record.id;
+          const countSpan = likeButton.querySelector('.like-count');
+          let currentCount = parseInt(countSpan.textContent);
+          if (localStorage.getItem('liked_' + recId)) {
+            let newCount = currentCount - 1;
+            countSpan.textContent = newCount;
+            localStorage.removeItem('liked_' + recId);
+            likeButton.classList.remove('liked');
+            updateLikeInAirtable(recId, newCount);
+          } else {
+            let newCount = currentCount + 1;
+            countSpan.textContent = newCount;
+            localStorage.setItem('liked_' + recId, 'true');
+            likeButton.classList.add('liked');
+            updateLikeInAirtable(recId, newCount);
+          }
+        });
+        info.appendChild(likeButton);
+
+        // Botón de carrito (añadir/quitar)
+        const cartButton = document.createElement('button');
+        cartButton.className = 'cart-button';
+        cartButton.dataset.recordId = record.id;
+        let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let isInCart = cart.find(item => item.id === record.id);
+        cartButton.textContent = isInCart ? 'Quitar del carrito' : 'Añadir al carrito';
+        cartButton.addEventListener('click', function(event) {
+          event.stopPropagation();
+          toggleCartItem(record, cartButton);
+        });
+        info.appendChild(cartButton);
+
+        item.appendChild(info);
+        gallery.appendChild(item);
+      });
+
+      // Configurar el modal para ampliar imagen
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modalImg');
+      const captionText = document.getElementById('caption');
+      const closeModal = document.getElementById('closeModal');
+
+      document.querySelectorAll('.item').forEach(item => {
+        item.addEventListener('click', function() {
+          modal.style.display = "block";
+          const img = item.querySelector('img');
+          modalImg.src = img.src;
+          captionText.innerHTML = item.querySelector('.info').innerHTML;
+        });
+      });
+
+      closeModal.addEventListener('click', function() {
+        modal.style.display = "none";
+      });
+
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+        if (event.target === document.getElementById('authModal')) {
+          document.getElementById('authModal').style.display = "none";
+        }
+      });
+
+      updateCartSummary();
     }
-    if (event.target === document.getElementById('authModal')) {
-      document.getElementById('authModal').style.display = "none";
-    }
-  });
 
-  updateCartSummary();
-}
-
-document.addEventListener('DOMContentLoaded', loadData);
+    document.addEventListener('DOMContentLoaded', loadData);
 
     function updateLikeInAirtable(recordId, newCount) {
       const updateUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
-      const dataToUpdate = {
-        fields: {
-          "Like": newCount
-        }
-      };
+      const dataToUpdate = { fields: { "Like": newCount } };
       fetch(updateUrl, {
         method: 'PATCH',
         headers: {
@@ -425,9 +397,7 @@ document.addEventListener('DOMContentLoaded', loadData);
         body: JSON.stringify(dataToUpdate)
       })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Error actualizando Like: ' + response.status);
-        }
+        if (!response.ok) throw new Error('Error actualizando Like: ' + response.status);
         return response.json();
       })
       .then(updatedData => {
@@ -440,27 +410,26 @@ document.addEventListener('DOMContentLoaded', loadData);
 
     // Función para añadir o quitar un artículo del carrito
     function toggleCartItem(record, button) {
-  let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-  const index = cart.findIndex(item => item.id === record.id);
-  if (index > -1) {
-    cart.splice(index, 1);
-    button.textContent = 'Añadir al carrito';
-  } else {
-    cart.push({
-      id: record.id,
-      titulo: record.fields.Titulo || '',
-      descripcion: record.fields.Descripción || '', // Asegúrate de guardar la descripción si la necesitas en la factura
-      precio: parseFloat(record.fields.Precios) || 0,
-      imagen: (record.fields.Contenido && record.fields.Contenido[0].url) || '',
-      cantidad: 1 // Valor por defecto
-    });
-    button.textContent = 'Quitar del carrito';
-  }
-  localStorage.setItem('cartItems', JSON.stringify(cart));
-  updateCartSummary(); // Si tienes una función para actualizar el resumen del carrito
-}
+      let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const index = cart.findIndex(item => item.id === record.id);
+      if (index > -1) {
+        cart.splice(index, 1);
+        button.textContent = 'Añadir al carrito';
+      } else {
+        cart.push({
+          id: record.id,
+          titulo: record.fields.Titulo || '',
+          descripcion: record.fields.Descripción || '',
+          precio: parseFloat(record.fields.Precios) || 0,
+          imagen: (record.fields.Contenido && record.fields.Contenido[0].url) || '',
+          cantidad: 1
+        });
+        button.textContent = 'Quitar del carrito';
+      }
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      updateCartSummary();
+    }
 
-    // Actualiza el resumen del carrito (total de artículos y costo)
     function updateCartSummary() {
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       let totalItems = cart.length;
@@ -469,122 +438,110 @@ document.addEventListener('DOMContentLoaded', loadData);
       document.getElementById('totalCost').textContent = totalCost.toFixed(2);
     }
 
-    // Evento para finalizar la compra
+    // Al presionar "Finalizar Compra" se muestra el formulario de Iniciar Sesión
     document.getElementById('finalizePurchaseButton').addEventListener('click', function() {
-      // Se asume que el usuario se guarda en localStorage tras registrarse
-      let user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        showRegistrationForm();
-      } else {
-        showLoginForm();
-      }
+      showLoginForm();
     });
 
     function showRegistrationForm() {
-  const authModal = document.getElementById('authModal');
-  const authFormContainer = document.getElementById('authFormContainer');
-  authFormContainer.innerHTML = `
-    <h2>Registro</h2>
-    <form id="registrationForm">
-      <label>Nombre: <input type="text" name="name" required></label>
-      <label>Correo: <input type="email" name="mail"></label>
-      <label>WhatsApp: <input type="text" name="whatsapp"></label>
-      <label>Contraseña: <input type="password" name="password1" required></label>
-      <label>Confirmar Contraseña: <input type="password" name="password2" required></label>
-      <button type="submit">Enviar</button>
-    </form>
-  `;
-  authModal.style.display = "block";
+      const authModal = document.getElementById('authModal');
+      const authFormContainer = document.getElementById('authFormContainer');
+      authFormContainer.innerHTML = `
+        <h2>Registro</h2>
+        <form id="registrationForm">
+          <label>Nombre: <input type="text" name="name" required></label>
+          <label>Correo: <input type="email" name="mail"></label>
+          <label>WhatsApp: <input type="text" name="whatsapp"></label>
+          <label>Contraseña: <input type="password" name="password1" required></label>
+          <label>Confirmar Contraseña: <input type="password" name="password2" required></label>
+          <button type="submit">Enviar</button>
+        </form>
+      `;
+      authModal.style.display = "block";
 
-  document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get('name').trim();
-    const mail = formData.get('mail').trim();
-    const whatsapp = formData.get('whatsapp').trim();
-    const password1 = formData.get('password1');
-    const password2 = formData.get('password2');
-    // Verifica que al menos se ingrese correo o WhatsApp
-    if (!mail && !whatsapp) {
-      alert("Debes ingresar al menos un dato: correo o WhatsApp.");
-      return;
+      document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const name = formData.get('name').trim();
+        const mail = formData.get('mail').trim();
+        const whatsapp = formData.get('whatsapp').trim();
+        const password1 = formData.get('password1');
+        const password2 = formData.get('password2');
+        if (!mail && !whatsapp) {
+          alert("Debes ingresar al menos un dato: correo o WhatsApp.");
+          return;
+        }
+        if (password1 !== password2) {
+          alert("Las contraseñas no coinciden.");
+          return;
+        }
+        submitRegistrationForm({ name, mail, whatsapp, password1, password2 });
+      });
     }
-    if (password1 !== password2) {
-      alert("Las contraseñas no coinciden.");
-      return;
-    }
-    submitRegistrationForm({ name, mail, whatsapp, password1, password2 });
-  });
-}
 
     function submitRegistrationForm({ name, mail, whatsapp, password1, password2 }) {
-  const fechaRegistro = new Date().toISOString();
-  const data = {
-  fields: {
-    "Name": name,
-    "Mail": mail,
-    "WhatsApp": whatsapp,
-    "1Password": password1,
-    "2Password": password2,
-    "Fecha de Registro": fechaRegistro
-  },
-  typecast: true
-};
+      const fechaRegistro = new Date().toISOString();
+      const data = {
+        fields: {
+          "Name": name,
+          "Mail": mail,
+          "WhatsApp": whatsapp,
+          "1Password": password1,
+          "2Password": password2,
+          "Fecha de Registro": fechaRegistro
+        },
+        typecast: true
+      };
 
+      fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(registroTable)}`, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + airtableApiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Registro guardado:', result);
+        localStorage.setItem('user', JSON.stringify({ mail, whatsapp, password: password1 }));
+        document.getElementById('authModal').style.display = "none";
+        window.location.href = "carrito.html";
+      })
+      .catch(error => {
+        console.error('Error al guardar el registro:', error);
+        alert("Error al guardar el registro. Inténtalo nuevamente.");
+      });
+    }
 
-fetch(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(registroTable)}`, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + airtableApiKey,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => {
-    console.log("Respuesta del fetch:", response); // Aquí se muestra la respuesta en la consola
-    return response.json();
-  })
-  .then(result => {
-    console.log('Registro guardado:', result);
-    localStorage.setItem('user', JSON.stringify({ mail, whatsapp, password: password1 }));
-    document.getElementById('authModal').style.display = "none";
-    window.location.href = "carrito.html";
-  })
-  .catch(error => {
-    console.error('Error al guardar el registro:', error);
-    alert("Error al guardar el registro. Inténtalo nuevamente.");
-  });
-}
-
-    // Mostrar formulario de inicio de sesión
     function showLoginForm() {
-  const authModal = document.getElementById('authModal');
-  const authFormContainer = document.getElementById('authFormContainer');
-  authFormContainer.innerHTML = `
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm">
-      <label>Correo o Teléfono: <input type="text" name="identifier" required></label>
-      <label>Contraseña: <input type="password" name="password" required></label>
-      <button type="submit">Entrar</button>
-    </form>
-    <button id="btnShowRegister" class="toggle-btn">Registrarme</button>
-  `;
-  authModal.style.display = "block";
+      const authModal = document.getElementById('authModal');
+      const authFormContainer = document.getElementById('authFormContainer');
+      authFormContainer.innerHTML = `
+        <h2>Iniciar Sesión</h2>
+        <form id="loginForm">
+          <label>Correo o Teléfono: <input type="text" name="identifier" required></label>
+          <label>Contraseña: <input type="password" name="password" required></label>
+          <button type="submit">Entrar</button>
+        </form>
+        <button id="btnShowRegister" class="toggle-btn">Registrarme</button>
+      `;
+      authModal.style.display = "block";
 
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const identifier = formData.get('identifier').trim();
-    const password = formData.get('password');
-    checkLoginCredentials(identifier, password);
-  });
-  document.getElementById('btnShowRegister').addEventListener('click', function() {
-    showRegistrationForm();
-  });
-}
-async function checkLoginCredentials(identifier, password) { 
+      document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const identifier = formData.get('identifier').trim();
+        const password = formData.get('password');
+        checkLoginCredentials(identifier, password);
+      });
+      document.getElementById('btnShowRegister').addEventListener('click', function() {
+        showRegistrationForm();
+      });
+    }
+
+    async function checkLoginCredentials(identifier, password) { 
   try {
-    // Fórmula de filtro para buscar coincidencias en Mail o WhatsApp con la contraseña
     const filterFormula = encodeURIComponent(`OR(AND({Mail} = '${identifier}', {1Password} = '${password}'), AND({WhatsApp} = '${identifier}', {1Password} = '${password}'))`);
     const queryUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(registroTable)}?filterByFormula=${filterFormula}`;
     const response = await fetch(queryUrl, {
@@ -592,7 +549,11 @@ async function checkLoginCredentials(identifier, password) {
     });
     const result = await response.json();
     if (result.records && result.records.length > 0) {
-      // Credenciales válidas: redirige a carrito.html
+      // Extraer el nombre y demás datos asociados
+      const userName = result.records[0].fields.Name || '';
+      const mail = result.records[0].fields.Mail || '';
+      const whatsapp = result.records[0].fields.WhatsApp || '';
+      localStorage.setItem('user', JSON.stringify({ name: userName, mail, whatsapp, password }));
       document.getElementById('authModal').style.display = "none";
       window.location.href = "carrito.html";
     } else {
@@ -603,7 +564,6 @@ async function checkLoginCredentials(identifier, password) {
     alert("Error al validar credenciales.");
   }
 }
-
 
   </script>
 </body>
