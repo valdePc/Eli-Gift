@@ -564,6 +564,20 @@
     alert("Error al validar credenciales.");
   }
 }
+function addToCart(product) {
+  let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  
+  // Asegúrate de que el producto tenga una imagen
+  let newItem = {
+    titulo: product.titulo,
+    descripcion: product.descripcion,
+    precio: product.precio,
+    imagen: product.imagen // Aquí debe estar la URL de la imagen
+  };
+
+  cartItems.push(newItem);
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+}
 
   </script>
 </body>

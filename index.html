@@ -288,15 +288,185 @@ footer {
   max-width: 300px;
   margin: 0 auto; /* Centra la imagen */
 }
+/* Estilos para el carrito */
+.cart-container {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+}
 
+.cart-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.cart-count {
+  background: #e60073;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+/* Estilos para el botón de menú */
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  display: block;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before {
+  top: -10px;
+}
+
+.menu-icon::after {
+  top: 10px;
+}
+
+/* Estilos para el carrito */
+.cart-container {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.cart-count {
+  background: #e60073;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+/* Estilos para el botón de menú */
+.menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  display: block;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  width: 30px;
+  height: 3px;
+  background-color: #e60073;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before {
+  top: -10px;
+}
+
+.menu-icon::after {
+  top: 10px;
+}
+
+/* Estilos para el modal de factura */
+#invoiceContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+#invoiceContainer h2 {
+  margin-bottom: 10px;
+}
+
+#invoiceContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+#invoiceContainer table, 
+#invoiceContainer th, 
+#invoiceContainer td {
+  border: 1px solid #ccc;
+}
+
+#invoiceContainer th, 
+#invoiceContainer td {
+  padding: 8px;
+  text-align: left;
+}
+
+#invoiceContainer button {
+  margin-top: 15px;
+  padding: 8px 12px;
+  background: #e60073;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
   <!-- Cabecera -->
   <header>
+    <div class="cart-container" onclick="window.location.href='carrito.html'">
+      <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e60073" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="cart-count">0</span>
+    </div>
+    
     <button class="menu-btn" onclick="toggleMenu()">
       <span class="menu-icon"></span>
     </button>
+  </header>
+  
     <style>
       body {
         background-image: url('images/images.jpg');
@@ -393,7 +563,14 @@ footer {
       }
       carouselInner.style.transform = 'translateX(' + (-currentSlide * 100) + '%)';
     }
-    
+    function updateCartCount() {
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  document.querySelector('.cart-count').textContent = cartItems.length;
+}
+
+// Llama a esta función cuando se cargue la página
+document.addEventListener('DOMContentLoaded', updateCartCount);
+
     function nextSlide() {
       showSlide(currentSlide + 1);
     }
@@ -519,9 +696,15 @@ footer {
     }
     
     document.addEventListener('DOMContentLoaded', loadCarouselImages);
+
+    
   </script>
 
 <script>
+  function showInvoice() {
+  window.location.href = "factura.html";
+}
+
   // Función para cargar contenido alternado (fotos, subtítulos y textos) desde Airtable
   async function loadAlternatingContent() {
     const airtableApiKey = 'patygcsH0vq1IXBGs.2ba9bfa1d43b68cd1b2c95d0d799e97038e80ab9388d6f87e071efbe6ec18bd4';

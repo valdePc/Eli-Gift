@@ -109,11 +109,33 @@
       cursor: pointer;
       font-size: 1em;
     }
+    #volverInicio {
+  background: linear-gradient(135deg, #e60073, black);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(230, 0, 115, 0.4);
+}
+
+#volverInicio:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(230, 0, 115, 0.5);
+}
+
   </style>
 </head>
+
 <body>
   <div class="container">
-    <!-- Encabezado -->
+    <button id="volverInicio" class="btn-volver">
+      ← Regresar
+    </button>
+    
     <div class="header">
       <h2 id="userName">Factura de: [Usuario]</h2>
       <p id="facturaDate">Fecha: [Fecha]</p>
@@ -137,6 +159,7 @@
       <button id="sendOrderButton">Enviar Pedido</button>
     </div>
   </div>
+  
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -203,41 +226,50 @@
   if (logoElement) {
     logoElement.src = eliGiftLogoUrl;
   }
+  document.getElementById('volverInicio').addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
 
   // Función para renderizar la factura usando tarjetas verticales
   function renderInvoice() {
-    const container = document.getElementById('itemsContainer');
-    if (!container) return;
-    container.innerHTML = '';
-    let totalCost = 0;
-    cartItems.forEach((item, index) => {
-      const cantidad = item.cantidad || 1;
-      const total = item.precio * cantidad;
-      totalCost += total;
-      
-      const card = document.createElement('div');
-      card.className = 'item-card';
-      card.innerHTML = `
-        <div class="item-title">${item.titulo}</div>
-        <div class="item-desc">${item.descripcion || ''}</div>
-        <div class="item-data">
-          <span>Costo: $${item.precio.toFixed(2)}</span>
-          <span>Total: $${total.toFixed(2)}</span>
-        </div>
-        <div class="item-data">
-          <label>Cantidad: <input type="number" min="1" value="${cantidad}" data-index="${index}" class="item-qty"></label>
-        </div>
-        <div class="actions">
-          <button data-index="${index}" class="removeItem">Eliminar</button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-    const totalCostElement = document.getElementById('totalCost');
-    if (totalCostElement) {
-      totalCostElement.textContent = totalCost.toFixed(2);
-    }
+  const container = document.getElementById('itemsContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  let totalCost = 0;
+
+  cartItems.forEach((item, index) => {
+    const cantidad = item.cantidad || 1;
+    const total = item.precio * cantidad;
+    totalCost += total;
+
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = `
+      <div class="item-image">
+        <img src="${item.imagen || 'placeholder.jpg'}" alt="${item.titulo}" style="max-width:100px;height:auto;">
+      </div>
+      <div class="item-title">${item.titulo}</div>
+      <div class="item-desc">${item.descripcion || ''}</div>
+      <div class="item-data">
+        <span>Costo: $${item.precio.toFixed(2)}</span>
+        <span>Total: $${total.toFixed(2)}</span>
+      </div>
+      <div class="item-data">
+        <label>Cantidad: <input type="number" min="1" value="${cantidad}" data-index="${index}" class="item-qty"></label>
+      </div>
+      <div class="actions">
+        <button data-index="${index}" class="removeItem">Eliminar</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  const totalCostElement = document.getElementById('totalCost');
+  if (totalCostElement) {
+    totalCostElement.textContent = totalCost.toFixed(2);
   }
+}
+
   
   renderInvoice();
   
@@ -349,5 +381,6 @@ Fecha: ${new Date().toLocaleString()}`;
 });
 
   </script>
+  
 </body>
 </html>
